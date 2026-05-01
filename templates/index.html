@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Projeto de Vendas</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    margin: 0;
+}
+
+.container {
+    width: 95%;
+    max-width: 1100px;
+    margin: 30px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+h1, p {
+    text-align: center;
+}
+
+.busca form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+input, button {
+    padding: 10px;
+}
+
+.produto {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.produto-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.linha {
+    display: flex;
+}
+
+.linha b {
+    width: 110px;
+}
+
+.produto img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.totais {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.card-total {
+    background: #eee;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.card {
+    background: #eee;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.grafico-container {
+    width: 100%;
+    height: 280px;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #999;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #2c5364;
+    color: white;
+}
+
+.botoes {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.botao {
+    background: #2c5364;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.acao {
+    background: #2c5364;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-block;
+    margin: 2px;
+}
+
+.acao.excluir {
+    background: #b22222;
+}
+
+@media (max-width: 900px) {
+    .produto {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .totais {
+        grid-template-columns: 1fr;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grafico-container {
+        height: 250px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>DataCommerce</h1>
+    <p>Sistema de análise para comércio eletrônico</p>
+
+    <div class="busca">
+        <form>
+            <input type="text" name="nome" placeholder="Digite o produto" value="{{ request.args.get('nome', '') }}">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    {% if vazio %}
+        <p style="color:red;">Produto não encontrado.</p>
+        <p style="text-align:center;">Cadastre um novo produto para começar.</p>
+    {% else %}
+
+    <div class="produto">
+        <div class="produto-info">
+            <div class="linha"><b>Produto:</b> <span>{{ nome }}</span></div>
+            <div class="linha"><b>Categoria:</b> <span>{{ categoria }}</span></div>
+            <div class="linha"><b>Marca:</b> <span>{{ marca }}</span></div>
+            <div class="linha"><b>Preço:</b> <span>R$ {{ "%.2f"|format(preco) }}</span></div>
+            <div class="linha"><b>Estoque:</b> <span>{{ estoque }}</span></div>
+        </div>
+
+        <img src="{{ url_for('static', filename='img/' + imagem) }}" alt="Imagem do produto">
+    </div>
+
+    <div class="totais">
+        <div class="card-total">
+            Total Unidades<br>{{ total_unidades }}
+        </div>
+
+        <div class="card-total">
+            Total em R$<br>R$ {{ "%.2f"|format(total_reais) }}
+        </div>
+    </div>
+
+    <div class="cards">
+        <div class="card">Média<br>{{ media }}</div>
+        <div class="card">Regressão<br>{{ regressao }}</div>
+        <div class="card">Tendência<br>{{ tendencia }}</div>
+        <div class="card">Demanda<br>{{ demanda }}<br>{{ status }}</div>
+    </div>
+
+    <h2>Gráfico de Vendas</h2>
+    <div class="grafico-container">
+        <canvas id="graficoVendas"></canvas>
+    </div>
+
+    <div id="grafico-dados"
+         data-labels='{{ datas_grafico|tojson }}'
+         data-valores='{{ quantidades_grafico|tojson }}'>
+    </div>
+
+    <h2>Histórico de Vendas</h2>
+
+    <table>
+        <tr>
+            <th>Data</th>
+            <th>Quantidade</th>
+            <th>Total</th>
+            <th>Ações</th>
+        </tr>
+
+        {% for h in historico %}
+        <tr>
+            <td>{{ h.data }}</td>
+            <td>{{ h.quantidade }}</td>
+            <td>R$ {{ "%.2f"|format(h.total) }}</td>
+            <td>
+                <a class="acao" href="/editar_venda/{{ h.id }}">Editar</a>
+                <a class="acao excluir" href="/excluir_venda/{{ h.id }}/{{ nome }}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% endif %}
+
+    <div class="botoes">
+        <a href="/" class="botao">Início</a>
+        <a href="/cadastro" class="botao">Criar Cadastro</a>
+        <a href="/produtos" class="botao">Produtos</a>
+
+        {% if not vazio %}
+        <a href="/cadastro_venda?produto_id={{ id_produto }}&nome={{ nome }}" class="botao">Cadastrar Venda</a>
+        <a href="/relatorio" class="botao">Relatório</a>
+        {% endif %}
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if not vazio %}
+<script>
+const ctx = document.getElementById("graficoVendas");
+const dados = document.getElementById("grafico-dados");
+
+if (ctx && dados) {
+    const labels = JSON.parse(dados.dataset.labels);
+    const valores = JSON.parse(dados.dataset.valores);
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Quantidade Vendida",
+                data: valores,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+</script>
+{% endif %}
+
+</body>
+</html>

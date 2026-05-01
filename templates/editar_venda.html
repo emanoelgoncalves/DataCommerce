@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Editar Venda</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+input, button {
+    padding: 10px;
+}
+
+button {
+    background: #2c5364;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}
+
+.botao {
+    background: #2c5364;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.erro {
+    color: red;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Editar Venda</h1>
+
+    {% if mensagem %}
+        <div class="erro">{{ mensagem }}</div>
+    {% endif %}
+
+    <form method="post">
+        <input type="hidden" name="nome_produto" value="{{ venda.nome_produto }}">
+
+        <input type="text" value="{{ venda.nome_produto }}" disabled>
+        <input type="number" name="quantidade" value="{{ venda.quantidade }}" required>
+        <input type="date" name="data" value="{{ venda.data.strftime('%Y-%m-%d') }}" required>
+
+        <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <a href="/?nome={{ venda.nome_produto }}" class="botao">Início</a>
+</div>
+
+</body>
+</html>

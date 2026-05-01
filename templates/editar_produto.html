@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Editar Produto</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+input, button {
+    padding: 10px;
+}
+
+button {
+    background: #2c5364;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}
+
+.botao {
+    background: #2c5364;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Editar Produto</h1>
+
+    <form method="post">
+        <input type="text" name="nome" value="{{ produto.nome }}" required>
+        <input type="text" name="categoria" value="{{ produto.categoria }}" required>
+        <input type="text" name="marca" value="{{ produto.marca }}" required>
+        <input type="number" step="0.01" name="preco" value="{{ produto.preco }}" required>
+        <input type="number" name="estoque" value="{{ produto.estoque }}" required>
+        <input type="text" name="imagem" value="{{ produto.imagem }}" placeholder="Imagem (opcional)">
+
+        <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <a href="/produtos" class="botao">Início</a>
+</div>
+
+</body>
+</html>

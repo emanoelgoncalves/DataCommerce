@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cadastrar Venda</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+input, button {
+    padding: 10px;
+}
+
+button {
+    background: #2c5364;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}
+
+.botao {
+    background: #2c5364;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.erro {
+    color: red;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Cadastrar Venda</h1>
+
+    {% if mensagem %}
+        <div class="erro">{{ mensagem }}</div>
+    {% endif %}
+
+    <form method="post">
+        <input type="hidden" name="produto_id" value="{{ produto_id }}">
+        <input type="hidden" name="nome_produto" value="{{ nome_produto }}">
+
+        <input type="text" value="{{ nome_produto }}" disabled>
+        <input type="number" name="quantidade" placeholder="Quantidade" required>
+        <input type="date" name="data" required>
+
+        <button type="submit">Salvar Venda</button>
+    </form>
+
+    <a href="/?nome={{ nome_produto }}" class="botao">Início</a>
+</div>
+
+</body>
+</html>

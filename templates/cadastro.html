@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cadastrar Produto</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+input, button {
+    padding: 10px;
+}
+
+button {
+    background: #2c5364;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}
+
+.botao {
+    background: #2c5364;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Cadastrar Produto</h1>
+
+    <form method="post">
+        <input type="text" name="nome" placeholder="Nome do produto" required>
+        <input type="text" name="categoria" placeholder="Categoria" required>
+        <input type="text" name="marca" placeholder="Marca" required>
+        <input type="number" step="0.01" name="preco" placeholder="Preço" required>
+        <input type="number" name="estoque" placeholder="Estoque" required>
+        <input type="text" name="imagem" placeholder="Imagem (opcional)">
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <a href="/" class="botao">Início</a>
+</div>
+
+</body>
+</html>
